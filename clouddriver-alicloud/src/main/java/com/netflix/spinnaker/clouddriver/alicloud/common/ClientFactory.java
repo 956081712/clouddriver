@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -27,7 +27,7 @@ public class ClientFactory {
   public IAcsClient createClient(String region, String accessKeyId, String accessSecretKey) {
     DefaultProfile profile = DefaultProfile.getProfile(region, accessKeyId, accessSecretKey);
     DefaultAcsClient defaultAcsClient = new DefaultAcsClient(profile);
-    defaultAcsClient.appendUserAgent("Spinnaker", "Clouddriver v1.0");
+    defaultAcsClient.appendUserAgent("Spinnaker", "Clouddriver/0.1.0");
     return defaultAcsClient;
   }
 }

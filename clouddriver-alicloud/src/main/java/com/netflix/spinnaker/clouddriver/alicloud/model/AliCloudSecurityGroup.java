@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -30,10 +30,15 @@ public class AliCloudSecurityGroup implements SecurityGroup {
   String name;
   String application;
   String accountName;
+  String account;
   String region;
   Set<Rule> inboundRules;
   Set<Rule> outboundRules;
   String vpcId;
+  String description;
+  String detail;
+  String stack;
+  String credentials;
 
   public AliCloudSecurityGroup(
       String id,
@@ -65,6 +70,30 @@ public class AliCloudSecurityGroup implements SecurityGroup {
   @Override
   public String getId() {
     return id;
+  }
+
+  public String getVpcId() {
+    return vpcId;
+  }
+
+  public String getAccount() {
+    return accountName;
+  }
+
+  public String getDescription() {
+    return application;
+  }
+
+  public String getDetail() {
+    return getMoniker().getDetail();
+  }
+
+  public String getStack() {
+    return getMoniker().getApp();
+  }
+
+  public String getCredentials() {
+    return accountName;
   }
 
   @Override

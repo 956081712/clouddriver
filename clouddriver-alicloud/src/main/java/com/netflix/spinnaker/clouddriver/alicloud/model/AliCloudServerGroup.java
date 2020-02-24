@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -133,24 +133,24 @@ public class AliCloudServerGroup implements ServerGroup, Serializable {
 
   @Override
   public ImagesSummary getImagesSummary() {
-    return new ImagesSummary() {
+    return new ServerGroup.ImagesSummary() {
       @Override
       public List<? extends ImageSummary> getSummaries() {
         List<ImageSummary> list = new ArrayList<>();
-        InnSum innSum = new InnSum(image, buildInfo, name);
-        list.add(innSum);
+        InnerSummary summary = new InnerSummary(image, buildInfo, name);
+        list.add(summary);
         return list;
       }
     };
   }
 
-  public class InnSum implements ImageSummary {
+  public class InnerSummary implements ServerGroup.ImageSummary {
 
     private Map<String, Object> i;
     private Map bi;
     private String serverGroupName;
 
-    public InnSum(Map<String, Object> i, Map bi, String serverGroupName) {
+    public InnerSummary(Map<String, Object> i, Map bi, String serverGroupName) {
       this.i = i;
       this.bi = bi;
       this.serverGroupName = serverGroupName;

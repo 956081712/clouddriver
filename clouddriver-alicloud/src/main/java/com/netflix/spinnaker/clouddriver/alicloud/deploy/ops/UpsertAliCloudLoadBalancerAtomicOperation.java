@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,23 +19,8 @@ package com.netflix.spinnaker.clouddriver.alicloud.deploy.ops;
 import com.aliyuncs.IAcsClient;
 import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.exceptions.ServerException;
-import com.aliyuncs.slb.model.v20140515.CreateLoadBalancerHTTPListenerRequest;
-import com.aliyuncs.slb.model.v20140515.CreateLoadBalancerHTTPSListenerRequest;
-import com.aliyuncs.slb.model.v20140515.CreateLoadBalancerRequest;
-import com.aliyuncs.slb.model.v20140515.CreateLoadBalancerResponse;
-import com.aliyuncs.slb.model.v20140515.CreateLoadBalancerTCPListenerRequest;
-import com.aliyuncs.slb.model.v20140515.CreateLoadBalancerUDPListenerRequest;
-import com.aliyuncs.slb.model.v20140515.DeleteLoadBalancerListenerRequest;
-import com.aliyuncs.slb.model.v20140515.DescribeLoadBalancerAttributeRequest;
-import com.aliyuncs.slb.model.v20140515.DescribeLoadBalancerAttributeResponse;
+import com.aliyuncs.slb.model.v20140515.*;
 import com.aliyuncs.slb.model.v20140515.DescribeLoadBalancerAttributeResponse.ListenerPortAndProtocal;
-import com.aliyuncs.slb.model.v20140515.DescribeLoadBalancersRequest;
-import com.aliyuncs.slb.model.v20140515.DescribeLoadBalancersResponse;
-import com.aliyuncs.slb.model.v20140515.SetLoadBalancerHTTPListenerAttributeRequest;
-import com.aliyuncs.slb.model.v20140515.SetLoadBalancerHTTPSListenerAttributeRequest;
-import com.aliyuncs.slb.model.v20140515.SetLoadBalancerStatusRequest;
-import com.aliyuncs.slb.model.v20140515.SetLoadBalancerTCPListenerAttributeRequest;
-import com.aliyuncs.slb.model.v20140515.SetLoadBalancerUDPListenerAttributeRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netflix.spinnaker.clouddriver.alicloud.common.ClientFactory;
 import com.netflix.spinnaker.clouddriver.alicloud.deploy.description.UpsertAliCloudLoadBalancerDescription;
@@ -45,12 +30,7 @@ import com.netflix.spinnaker.clouddriver.data.task.Task;
 import com.netflix.spinnaker.clouddriver.data.task.TaskRepository;
 import com.netflix.spinnaker.clouddriver.orchestration.AtomicOperation;
 import groovy.util.logging.Slf4j;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -128,6 +108,10 @@ public class UpsertAliCloudLoadBalancerAtomicOperation implements AtomicOperatio
       if (!StringUtils.isEmpty(description.getVSwitchId())) {
         loadBalancerRequest.setVSwitchId(description.getVSwitchId());
       }
+      if ("internet".equalsIgnoreCase(loadBalancerRequest.getAddressType())) {
+        loadBalancerRequest.setVSwitchId("");
+      }
+
       // Instance delete protection off
       loadBalancerRequest.setDeleteProtection("off");
       CreateLoadBalancerResponse loadBalancerResponse;
