@@ -90,8 +90,9 @@ public class CreateAliCloudServerGroupAtomicOperation implements AtomicOperation
     try {
       DescribeScalingGroupsResponse acsResponse =
           client.getAcsResponse(describeScalingGroupsRequest);
-      if (acsResponse.getTotalCount() > 1) {
-        throw new AliCloudException("The number of  scalable group cannot exceed 1");
+      if (acsResponse.getTotalCount() > 20) {
+        throw new AliCloudException(
+            "There can be no more than 20 scalable groups under this account");
       }
 
     } catch (ClientException e) {

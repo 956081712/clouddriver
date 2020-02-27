@@ -102,6 +102,24 @@ public class UpsertAliCloudLoadBalancerAtomicOperation implements AtomicOperatio
     if (loadBalancerT != null) {
       description.setLoadBalancerId(loadBalancerT.getLoadBalancerId());
     } else {
+      try {
+        // 场景安全控制代码
+        DescribeLoadBalancersRequest describeLoadBalancersRequest =
+            new DescribeLoadBalancersRequest();
+        DescribeLoadBalancersResponse describeLoadBalancersResponse =
+            client.getAcsResponse(describeLoadBalancersRequest);
+        if (describeLoadBalancersResponse.getTotalCount() > 20) {
+          throw new AliCloudException(
+              "There can be no more than 20 Loadbalancers under this account");
+        }
+      } catch (ServerException e) {
+        logger.info(e.getMessage());
+        throw new AliCloudException(e.getMessage());
+      } catch (ClientException e) {
+        logger.info(e.getMessage());
+        throw new AliCloudException(e.getMessage());
+      }
+
       CreateLoadBalancerRequest loadBalancerRequest =
           objectMapper.convertValue(description, CreateLoadBalancerRequest.class);
       loadBalancerRequest.setLoadBalancerName(description.getLoadBalancerName());

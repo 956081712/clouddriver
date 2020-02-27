@@ -73,6 +73,13 @@ public class UpsertAliCloudSecurityGroupAtomicOperation implements AtomicOperati
       describeSecurityGroupsResponse = client.getAcsResponse(describeSecurityGroupsRequest);
       List<SecurityGroup> securityGroups = describeSecurityGroupsResponse.getSecurityGroups();
       if (securityGroups.size() == 0) {
+        // 场景安全控制代码
+        DescribeSecurityGroupsRequest securityGroupsRequest = new DescribeSecurityGroupsRequest();
+        DescribeSecurityGroupsResponse acsResponse = client.getAcsResponse(securityGroupsRequest);
+        if (acsResponse.getTotalCount() > 20) {
+          throw new AliCloudException(
+              "There can be no more than 20 securityGroups under this account");
+        }
         CreateSecurityGroupRequest createSecurityGroupRequest =
             objectMapper.convertValue(description, CreateSecurityGroupRequest.class);
         CreateSecurityGroupResponse createSecurityGroupResponse =

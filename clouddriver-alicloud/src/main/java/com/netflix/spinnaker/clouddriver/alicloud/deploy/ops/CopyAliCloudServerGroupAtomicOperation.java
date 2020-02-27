@@ -103,6 +103,26 @@ public class CopyAliCloudServerGroupAtomicOperation implements AtomicOperation<D
 
       CreateScalingGroupRequest createScalingGroupRequest =
           buildScalingGroupData(description, scalingGroup);
+      // 场景安全控制代码
+      if (description.getMaxSize() > 10) {
+        throw new AliCloudException(
+            "The number of instances under a scalable group cannot exceed 10");
+      }
+      DescribeScalingGroupsRequest describeScalingGroupsRequest =
+          new DescribeScalingGroupsRequest();
+      try {
+        // 场景安全控制代码
+        DescribeScalingGroupsResponse acsResponse =
+            client.getAcsResponse(describeScalingGroupsRequest);
+        if (acsResponse.getTotalCount() > 20) {
+          throw new AliCloudException(
+              "There can be no more than 20 scalable groups under this account");
+        }
+
+      } catch (ClientException e) {
+        log.info(e.getMessage());
+        throw new AliCloudException(e.getMessage());
+      }
 
       CreateScalingGroupResponse createScalingGroupResponse =
           client.getAcsResponse(createScalingGroupRequest);
