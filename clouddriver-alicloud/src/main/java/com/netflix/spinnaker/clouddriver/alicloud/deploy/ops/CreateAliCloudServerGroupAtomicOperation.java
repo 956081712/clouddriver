@@ -81,6 +81,24 @@ public class CreateAliCloudServerGroupAtomicOperation implements AtomicOperation
             description.getFreeFormDetails(),
             false);
     description.setScalingGroupName(serverGroupName);
+    // 场景安全控制代码
+    if (description.getMaxSize() > 10) {
+      throw new AliCloudException(
+          "The number of instances under a scalable group cannot exceed 10");
+    }
+    DescribeScalingGroupsRequest describeScalingGroupsRequest = new DescribeScalingGroupsRequest();
+    try {
+      DescribeScalingGroupsResponse acsResponse =
+          client.getAcsResponse(describeScalingGroupsRequest);
+      if (acsResponse.getTotalCount() > 1) {
+        throw new AliCloudException("The number of  scalable group cannot exceed 1");
+      }
+
+    } catch (ClientException e) {
+      log.info(e.getMessage());
+      throw new AliCloudException(e.getMessage());
+    }
+
     CreateScalingGroupRequest createScalingGroupRequest =
         objectMapper.convertValue(description, CreateScalingGroupRequest.class);
     rebuildCreateScalingGroupRequest(description, createScalingGroupRequest);
